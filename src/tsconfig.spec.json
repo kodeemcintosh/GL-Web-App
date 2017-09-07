@@ -10,6 +10,7 @@
       "node"
     ]
   },
+  "experimentalDecorators": false,
   "files": [
     "test.ts"
   ],

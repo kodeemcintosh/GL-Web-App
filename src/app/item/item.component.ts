@@ -2,35 +2,24 @@ import { Component, OnInit } from '@angular/core';
 import { Http } from '@angular/http';
 import { HttpClient } from '@angular/common/http';
 import 'rxjs/Rx';
-import { GroceryItem } from './item/GroceryItem';
-import { GroceryService } from './Grocery.service';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  selector: 'item-component',
+  templateUrl: './item.component.html',
+  styleUrls: ['./item.component.css']
 })
-export class AppComponent implements OnInit{
+export class ItemComponent {
   title:string = "Kodee's Grocery List App";
-  list: Array<GroceryItem>;
+  groceryList: Array<string>;
 
-  constructor(
-    private http: HttpClient,
-    private _GroceryService: GroceryService
-  )
-  {
-    _GroceryService.GetGroceryList()
-      .subscribe((res) => { this.list = res});
-  }
+  constructor(private http: HttpClient) { }
 
   ngOnInit() {
+      this.groceryList = this.getGroceryList();
     return 
   }
 
   private getGroceryList(): any {
-
-    this._GroceryService.GetGroceryList()
-      .subscribe((res) => { this.list = res});
     // this.http.get("localhost:2481/api/groceries")
       // .map((res: Response) => {
         // var data = res.json();
