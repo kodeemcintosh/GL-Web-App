@@ -1,19 +1,46 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
-import { GroceryService } from './Grocery.service';
+import { HttpModule, RequestOptions } from '@angular/http';
+import { FormsModule } from '@angular/forms';
+import { MatListModule } from '@angular/material';
+import { GroceryService } from './_services/GroceryList.service';
+import { DefaultHttpOptions } from './_services/DefaultHttpOptions.service';
+import { RouterModule, Routes } from '@angular/router';
 
 import { AppComponent } from './app.component';
+import { ItemComponent } from './item/item.component';
+
+const appRoutes: Routes = [
+  { path: '', component: AppComponent },
+  // {
+  //   path: '/',
+  //   redirectTo: '',
+  //   pathMatch: 'full'
+  // }
+];
+
+
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    ItemComponent
   ],
   imports: [
+    RouterModule.forRoot(appRoutes),
     BrowserModule,
-    HttpClientModule
+    FormsModule,
+    HttpModule,
+    HttpClientModule,
+    MatListModule
   ],
-  providers: [GroceryService],
-  bootstrap: [AppComponent]
+  providers: [
+    {provide: RequestOptions, useClass: DefaultHttpOptions },
+    GroceryService,
+  ],
+  bootstrap: [
+    AppComponent
+  ]
 })
 export class AppModule { }

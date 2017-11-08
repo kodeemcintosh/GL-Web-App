@@ -1,6 +1,6 @@
 import { AppPage } from './app.po';
 
-describe('grocery-list-web-app App', () => {
+describe('gl-web-app App', () => {
   let page: AppPage;
 
   beforeEach(() => {

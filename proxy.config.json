@@ -1,0 +1,7 @@
+{
+    "/api/GroceryList": {
+        "target": "http://localhost:2482",
+        "secure": false,
+       "loglevel": "debug"
+    }
+}

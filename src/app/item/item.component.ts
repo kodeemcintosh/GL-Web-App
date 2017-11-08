@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { Http } from '@angular/http';
+import { Component, OnInit, Input } from '@angular/core';
+// import { Http } from '@angular/http';
 import { HttpClient } from '@angular/common/http';
 import 'rxjs/Rx';
+
+import { GroceryService } from '../_services/GroceryList.service';
+import { GroceryItem } from '../_models/item.model';
 
 @Component({
   selector: 'item-component',
@@ -9,35 +12,46 @@ import 'rxjs/Rx';
   styleUrls: ['./item.component.css']
 })
 export class ItemComponent {
-  title:string = "Kodee's Grocery List App";
-  groceryList: Array<string>;
-
-  constructor(private http: HttpClient) { }
-
-  ngOnInit() {
-      this.groceryList = this.getGroceryList();
-    return 
-  }
-
-  private getGroceryList(): any {
-    // this.http.get("localhost:2481/api/groceries")
-      // .map((res: Response) => {
-        // var data = res.json();
-      //   // return data;
-      // }
-//      .subscribe((results) => {
-//        var data = results;
-          
-//        })
-//      });
+  // private fields for dependency injection
+  private _groceryService: GroceryService;
 
 
+  //other variables
+  title: string = "Kodee's Grocery List App";
+
+  @Input()
+  list: Array<GroceryItem>;
+
+
+  constructor(
+    private http: HttpClient,
+    private groceryService: GroceryService
+  )
+  {
+    this._groceryService = groceryService;
+    this.getGroceryList();
+    
   }
   
-
-  public submit() {
-
-
-
+  private getGroceryList() {
+    this._groceryService.GetGroceryList()
+      .subscribe((res) => { 
+        res.forEach((item) => {
+          this.list.push(new GroceryItem(item.name, item.quantity))
+        });
+      });
   }
+
+  private addGroceryItem(item: string, quantity?: number): void{
+
+    this._groceryService.UpdateGroceryList(item, quantity);
+    this.getGroceryList();
+  }
+
+  private removeGroceryItem(item: string, quantity: number): void{
+
+    this._groceryService.DeleteGroceryItem(item);
+    this.getGroceryList();
+  }
+ 
 }

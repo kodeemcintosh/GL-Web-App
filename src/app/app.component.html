@@ -5,22 +5,19 @@
   </h1>
 </div>
 <div>
-  <form>
-    <span>
-      <label>Enter Grocery Item: </label>
-      <input type='text'>
-    </span>
-    <span>
-      <label>Enter Item Quantity: </label>
-      <input type='text'>
-    </span>
-    <span>
-      <input type="radio" name="action" value="insert">
-      <input type="radio" name="action" value="delete">
-    </span>
-    <button onclick="submit()">Enter</button>
-  </form>
-  <div *ngFor="item in itemList">
-    <item-component></item-component>
-  </div>
+  <span>
+    <label>Enter Grocery Item: {{newItem.name}}</label>
+    <!-- <input type='text' [value]="inputName" (input)="inputName = $event.target.value"/> -->
+    <input [(ngModel)]="inputName" />
+  </span>
+  <span>
+    <label>Enter Item Quantity: {{newItem.quantity}}</label>
+    <!-- can be done this way too -->
+    <!-- <input type='text' pInputText [value]="inputQuantity" (input)="inputQuantity = $event.target.value" /> -->
+    <input type='text' [(ngModel)]="inputQuantity" />
+    <!-- <input type='text' pInputText [(ngModel)]="inputQuantity" /> -->
+  </span>
+  <!-- <button pButton type="button" label="Create Item" (click)="insertGroceryItem(inputName, inputQuantity)"></button> -->
+  <button type="button" (click)="insertGroceryItem(inputName, inputQuantity)">Create Item</button>
+    <item-component [list]="groceryList | async"></item-component>
 </div>
