@@ -18,7 +18,6 @@ export class GroceryService {
     //         'X-Requested-By': 'Angular 2',
     //         'Host': 'http://localhost:2482'
     // })
-    // private url: string = "/api/GroceryList";
 
     constructor(public http:HttpClient)
     {
