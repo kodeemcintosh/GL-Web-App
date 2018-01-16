@@ -17,12 +17,12 @@ export class ItemComponent {
   private _groceryService: GroceryService;
 
   //other variables
-  @Input() private item: GroceryItem;
-  @Output() private refresh = new EventEmitter();
+  @Input() item: GroceryItem;
+  @Output() refresh = new EventEmitter();
   private rxRefresh = new RxSubject;
 
-  private title: string = "Kodee's Grocery List App";
-  private quantity: number;
+  title: string = "Kodee's Grocery List App";
+  quantity: number;
 
   constructor(
     public groceryService: GroceryService

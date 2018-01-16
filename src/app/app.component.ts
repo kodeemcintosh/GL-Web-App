@@ -12,17 +12,17 @@ import { GroceryService } from './_services/GroceryList.service';
 export class AppComponent {
   // fields for dependency injection
   private _groceryService: GroceryService;
-  private items$: RxObservable<GroceryItem[]>;
+  items$: RxObservable<GroceryItem[]>;
   private rxRefresh = new RxSubject;
 
-  private title: string = "Kodee's Grocery List App";
-  private name: string;
-  private quantity: number;
+  title: string = "Kodee's Grocery List App";
+  name: string;
+  quantity: number;
 
-  private clearName() {
+  clearName() {
     this.name = '';
   }
-  private clearQuantity() {
+  clearQuantity() {
     this.quantity = null;
   }
 
@@ -51,7 +51,7 @@ export class AppComponent {
     // this.items$ = this._groceryService.GetGroceryList();
   }
 
-  private createGroceryItem(): void{
+  createGroceryItem(): void{
 
     this._groceryService.CreateGroceryItem(new GroceryItem(this.name, this.quantity))
       .subscribe();
