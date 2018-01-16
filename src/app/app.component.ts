@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import 'rxjs/Rx';
+import { Component, Input, OnInit } from '@angular/core';
+import { Subject as RxSubject, Observable as RxObservable } from 'rxjs/rx';
 
 import { GroceryItem } from './_models/item.model';
 import { GroceryService } from './_services/GroceryList.service';
@@ -13,65 +12,55 @@ import { GroceryService } from './_services/GroceryList.service';
 export class AppComponent {
   // fields for dependency injection
   private _groceryService: GroceryService;
+  private items$: RxObservable<GroceryItem[]>;
+  private rxRefresh = new RxSubject;
 
-  title:string = "Kodee's Grocery List App";
+  private title: string = "Kodee's Grocery List App";
+  private name: string;
+  private quantity: number;
 
-  // inputName: string = "";
-  // inputQuantity: number = null;
-  groceryList: Array<GroceryItem>;
-  newItem: GroceryItem;
-
+  private clearName() {
+    this.name = '';
+  }
+  private clearQuantity() {
+    this.quantity = null;
+  }
 
   constructor(
-    http: HttpClient,
-    private groceryService: GroceryService
+    public groceryService: GroceryService
   )
   {
     this._groceryService = groceryService;
-    
-    this.newItem = new GroceryItem();
-  }
+    this.items$ = new RxObservable<GroceryItem[]>();
 
-  private getGroceryList(): void{
-
-    this._groceryService.GetGroceryList()
-      .subscribe((res) => {
-        res.forEach((item) => {
-          this.groceryList.push(new GroceryItem(item.name, item.quantity))
-        });
+    this.rxRefresh.delay(10)
+      .subscribe(() => {
+        this.items$ = this._groceryService.GetGroceryList();
       });
   }
 
-  // private insertGroceryItem(): void{
-  // private insertGroceryItem(item: string, quantity: number): void{
-    //TODO figure out this object stuff!!!!!!!!!!!!!!
-  private insertGroceryItem(item: GroceryItem): void{
-
-    // this._GroceryService.InsertGroceryItem(item, quantity);
-    //  TODO figure out this object stuff!!!!!!!!
-    this._groceryService.InsertGroceryItem(item);
-    this.getGroceryList();
-    // this._GroceryService.InsertGroceryItem(this.inputName, this.inputQuantity);
+  ngOnInit() {
+    this.items$ = this._groceryService.GetGroceryList();
+    // this.rxRefresh.next();
   }
 
-  private addGroceryItem(item: string, quantity?: number): void{
-
-    this._groceryService.UpdateGroceryList(item, quantity);
-    this.getGroceryList();
+  private pullList() {
+    this.clearName();
+    this.clearQuantity();
+    this.rxRefresh.next();
+    // this.items$ = this._groceryService.GetGroceryList();
   }
 
-  private removeGroceryItem(item: string, quantity: number): void{
+  private createGroceryItem(): void{
 
-    this._groceryService.RemoveGroceryItem(item, quantity);
-    this.getGroceryList();
+    this._groceryService.CreateGroceryItem(new GroceryItem(this.name, this.quantity))
+      .subscribe();
+    this.pullList();
   }
 
-  // public submit(item: string, quantity: number) {
-  public submit(item: GroceryItem) {
-    // this.insertGroceryItem(item, quantity);
-    this.insertGroceryItem(item);
-    // this.insertGroceryItem();
-    this.getGroceryList();
-
+  public submit() {
+    this._groceryService.CreateGroceryItem(new GroceryItem(this.name, this.quantity))
+      .subscribe();
+    this.pullList();
   }
 }

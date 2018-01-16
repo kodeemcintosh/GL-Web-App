@@ -1,10 +1,10 @@
-import { Component, OnInit, Input } from '@angular/core';
-// import { Http } from '@angular/http';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import 'rxjs/Rx';
+import { Observable as RxObservable, Subject as RxSubject } from "rxjs/Rx";
 
 import { GroceryService } from '../_services/GroceryList.service';
 import { GroceryItem } from '../_models/item.model';
+// import { EventEmitter } from '@angular/core/src/event_emitter';
 
 @Component({
   selector: 'item-component',
@@ -12,46 +12,61 @@ import { GroceryItem } from '../_models/item.model';
   styleUrls: ['./item.component.css']
 })
 export class ItemComponent {
+
   // private fields for dependency injection
   private _groceryService: GroceryService;
 
-
   //other variables
-  title: string = "Kodee's Grocery List App";
+  @Input() private item: GroceryItem;
+  @Output() private refresh = new EventEmitter();
+  private rxRefresh = new RxSubject;
 
-  @Input()
-  list: Array<GroceryItem>;
-
+  private title: string = "Kodee's Grocery List App";
+  private quantity: number;
 
   constructor(
-    private http: HttpClient,
-    private groceryService: GroceryService
+    public groceryService: GroceryService
   )
   {
     this._groceryService = groceryService;
-    this.getGroceryList();
-    
-  }
-  
-  private getGroceryList() {
-    this._groceryService.GetGroceryList()
-      .subscribe((res) => { 
-        res.forEach((item) => {
-          this.list.push(new GroceryItem(item.name, item.quantity))
-        });
+
+    this.rxRefresh.delay(50)
+      .subscribe(() => {
+        this.refresh.emit();
       });
+    }
+
+  // TODO: figure out why there are multiple GET calls following POSTs
+  // AND: figure out how to make component refresh GET calls to wait for the POSTs to finish
+  // (i.e. fix the refresh bug)
+  public addGroceryItem(name: string) {
+
+    
+    if (this.quantity == null)
+    {
+      this._groceryService.UpdateGroceryList(new GroceryItem(name, 1))
+        .subscribe();
+      this.rxRefresh.next();
+    } else {
+
+      this._groceryService.UpdateGroceryList(new GroceryItem(name, this.quantity))
+        .subscribe();
+        this.rxRefresh.next();
+    }
   }
 
-  private addGroceryItem(item: string, quantity?: number): void{
+  public removeGroceryItem(name: string): void{
+    if (this.quantity == null)
+    {
+      this._groceryService.RemoveGroceryItem(new GroceryItem(name, 1))
+        .subscribe();
+        this.rxRefresh.next();
 
-    this._groceryService.UpdateGroceryList(item, quantity);
-    this.getGroceryList();
+    } else {
+      this._groceryService.RemoveGroceryItem(new GroceryItem(name, this.quantity))
+        .subscribe();
+        this.rxRefresh.next();
+
+    }
   }
-
-  private removeGroceryItem(item: string, quantity: number): void{
-
-    this._groceryService.DeleteGroceryItem(item);
-    this.getGroceryList();
-  }
- 
 }

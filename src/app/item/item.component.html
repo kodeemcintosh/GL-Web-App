@@ -1,14 +1,15 @@
-<mat-list>
-<mat-list-item *ngFor="let item of list">
-    <td>
-        <ul>
-            <label>{{item.name}}</label>
-            <label>{{item.quantity}}</label>
-        </ul>
-        <!-- <button pButton type="button" class="ui-button-success" iconPos="left" (click)="addGroceryItem(item.item, input)">Add</button>
-        <button pButton type="button" class="ui-button-danger" iconPos="right" (click)="removeGroceryItem(item.item, input)">Remove</button> -->
-        <button (click)="addGroceryItem(item.item, input)">Add</button>
-        <button (click)="removeGroceryItem(item.item, input)">Remove</button>
-    </td>
-</mat-list-item>
-</mat-list>
+<div>
+    <clr-dg-row>
+        <clr-dg-cell>{{item.name}}</clr-dg-cell>
+        <clr-dg-cell>{{item.quantity}}</clr-dg-cell>
+        <clr-dg-cell>
+            <input type="text" [(ngModel)]="quantity" placeholder="Quantity" />
+            <button (click)="addGroceryItem(item.name)">
+                <clr-icon shape="plus"></clr-icon>
+            </button>
+            <button (click)="removeGroceryItem(item.name)">
+                <clr-icon shape="trash"></clr-icon>
+            </button>
+        </clr-dg-cell>
+    </clr-dg-row>
+</div>

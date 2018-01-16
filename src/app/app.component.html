@@ -1,23 +1,30 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{title}}!
-  </h1>
-</div>
-<div>
-  <span>
-    <label>Enter Grocery Item: {{newItem.name}}</label>
-    <!-- <input type='text' [value]="inputName" (input)="inputName = $event.target.value"/> -->
-    <input [(ngModel)]="inputName" />
-  </span>
-  <span>
-    <label>Enter Item Quantity: {{newItem.quantity}}</label>
-    <!-- can be done this way too -->
-    <!-- <input type='text' pInputText [value]="inputQuantity" (input)="inputQuantity = $event.target.value" /> -->
-    <input type='text' [(ngModel)]="inputQuantity" />
-    <!-- <input type='text' pInputText [(ngModel)]="inputQuantity" /> -->
-  </span>
-  <!-- <button pButton type="button" label="Create Item" (click)="insertGroceryItem(inputName, inputQuantity)"></button> -->
-  <button type="button" (click)="insertGroceryItem(inputName, inputQuantity)">Create Item</button>
-    <item-component [list]="groceryList | async"></item-component>
-</div>
+<section class="main">
+  <div style="text-align:center">
+    <h1>
+      Welcome to {{title}}!
+    </h1>
+  </div>
+  <div>
+    <span>
+      <input type='text' [(ngModel)]="name" (click)="clearName()" placeholder="Enter Grocery Item"/>
+    </span>
+    <span>
+      <input type='text' [(ngModel)]="quantity" (click)="clearQuantity()" placeholder="Enter Quantity"/>
+    </span>
+    <button type="button" (submit)="submit()" (click)="createGroceryItem()">Create Item</button>
+  </div>
+  <div>
+    <clr-datagrid *ngIf="(items$ | async)">
+        <clr-dg-column>ITEM</clr-dg-column>
+        <clr-dg-column>QUANTITY</clr-dg-column>
+        <!-- <clr-dg-column>PRICE</clr-dg-column> -->
+        <clr-dg-column></clr-dg-column>
+    
+        <span *ngFor="let item of items$ | async">
+          <item-component [item]=item (refresh)="pullList()"></item-component>
+        </span>
+        <clr-dg-footer>{{items$.length}} items</clr-dg-footer>
+    </clr-datagrid>
+  </div>
+</section>
